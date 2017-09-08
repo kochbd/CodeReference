@@ -1,0 +1,9 @@
+c:\users\bkoch.mitchell\documents\visual studio 2017\Projects\CodeReference\CodeReference\bin\Debug\CodeReference.exe.config
+c:\users\bkoch.mitchell\documents\visual studio 2017\Projects\CodeReference\CodeReference\bin\Debug\CodeReference.exe
+c:\users\bkoch.mitchell\documents\visual studio 2017\Projects\CodeReference\CodeReference\bin\Debug\CodeReference.pdb
+c:\users\bkoch.mitchell\documents\visual studio 2017\Projects\CodeReference\CodeReference\obj\Debug\CodeReference.csprojResolveAssemblyReference.cache
+c:\users\bkoch.mitchell\documents\visual studio 2017\Projects\CodeReference\CodeReference\obj\Debug\CodeReference.Form1.resources
+c:\users\bkoch.mitchell\documents\visual studio 2017\Projects\CodeReference\CodeReference\obj\Debug\CodeReference.Properties.Resources.resources
+c:\users\bkoch.mitchell\documents\visual studio 2017\Projects\CodeReference\CodeReference\obj\Debug\CodeReference.csproj.GenerateResource.Cache
+c:\users\bkoch.mitchell\documents\visual studio 2017\Projects\CodeReference\CodeReference\obj\Debug\CodeReference.exe
+c:\users\bkoch.mitchell\documents\visual studio 2017\Projects\CodeReference\CodeReference\obj\Debug\CodeReference.pdb
