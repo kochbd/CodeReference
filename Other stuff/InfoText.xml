@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<InfoNodes>
+  <InfoNode Name="Check if Null" Parent="BAQNode">
+    <data line="0">{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17 CASE WHEN OrderHed.PONum IS NULL THEN '' ELSE OrderHed.OrderDate END\par
+\par
+}
+</data>
+  </InfoNode>
+  <InfoNode Name="unbelievable" Parent="BPMNode">
+    <data line="0">{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+{\colortbl ;\red255\green0\blue0;}
+\viewkind4\uc1\pard\f0\fs17 First line\par
+and this.... is the \cf1 second\cf0\par
+}
+</data>
+  </InfoNode>
+  <InfoNode Name="Impersonation" Parent="CustomizationNode">
+    <data line="0">{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+{\colortbl ;\red0\green187\blue47;\red0\green0\blue0;}
+\viewkind4\uc1\pard\f0\fs17 When you execute code from a customization it only has as much permissions as the user interacting with the form. When I was setting up Bartender for the first time I found that most users did not have permission to edit the folder that the Bartender integration reads from. This is where impersonation came in handy; I was able to impersonate a user with the correct permissions, write the file, and then end the impersonation.\par
+\par
+This is the code used within the Script class to perform the impersonation\par
+\par
+using (var wim = new WindowsIdentityImpersonator("EPICORHOSTING", "99680.jnichols", "Epicor.1265!"))\par
+        \{\par
+            wim.BeginImpersonate();\par
+            \{\par
+\tab\cf1 //Place code here\cf0\par
+            \}\par
+            wim.EndImpersonate();\par
+        \}\par
+\par
+\cf2 __________________________________________________________________________________________________________________________________\cf0\par
+\par
+\par
+This code should be placed outside the Script class and is what you made an instance of above.\par
+\par
+public class WindowsIdentityImpersonator : IDisposable\par
+    \{\par
+        WindowsIdentity _newId;\par
+        SafeTokenHandle _safeTokenHandle;\par
+        WindowsImpersonationContext _impersonatedUser;\par
+\par
+        public WindowsIdentity Identity \{ get \{ return _newId; \} \}\par
+\par
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]\par
+        public WindowsIdentityImpersonator(string Domain, string Username, string Password)\par
+        \{\par
+            bool returnValue = LogonUser(Username, Domain, Password, 2, 0, out _safeTokenHandle);\par
+\par
+            if (returnValue == false)\par
+            \{\par
+                throw new UnauthorizedAccessException("Could not login as " + Domain + "\\\\" + Username + ".",\par
+                    new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error()));\par
+            \}\par
+        \}\par
+\par
+        public void BeginImpersonate()\par
+        \{\par
+            _newId = new WindowsIdentity(_safeTokenHandle.DangerousGetHandle());\par
+            _impersonatedUser = _newId.Impersonate();\par
+        \}\par
+\par
+        public void EndImpersonate()\par
+        \{\par
+            if (_newId != null)\par
+            \{\par
+                _newId.Dispose();\par
+            \}\par
+\par
+            if (_impersonatedUser != null)\par
+            \{\par
+                _impersonatedUser.Dispose();\par
+            \}\par
+        \}\par
+\par
+        public void Dispose()\par
+        \{\par
+            this.EndImpersonate();\par
+\par
+            if (_safeTokenHandle != null)\par
+            \{\par
+                _safeTokenHandle.Dispose();\par
+            \}\par
+        \}\par
+\par
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]\par
+        public static extern bool LogonUser(String lpszUsername, String lpszDomain, String lpszPassword,\par
+            int dwLogonType, int dwLogonProvider, out SafeTokenHandle phToken);\par
+\par
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]\par
+        public extern static bool CloseHandle(IntPtr handle);\par
+    \}\par
+\par
+    public sealed class SafeTokenHandle : SafeHandleZeroOrMinusOneIsInvalid\par
+    \{\par
+        private SafeTokenHandle() : base(true)\par
+        \{\par
+        \}\par
+\par
+        [DllImport("kernel32.dll")]\par
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]\par
+        [SuppressUnmanagedCodeSecurity]\par
+        [return: MarshalAs(UnmanagedType.Bool)]\par
+        private static extern bool CloseHandle(IntPtr handle);\par
+\par
+        protected override bool ReleaseHandle()\par
+        \{\par
+            return CloseHandle(handle);\par
+        \}\par
+    \}\par
+\par
+}
+</data>
+  </InfoNode>
+</InfoNodes>
